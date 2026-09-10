@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bioss Pharma — Interactive Expo Microsite</title>
+  <meta name="description" content="Bioss Pharma: Your gateway to Brazil & South America. Market access, regulatory support, importation and distribution for innovative, specialty and high-complexity medicines.">
+  <meta name="theme-color" content="#008b98">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & CSS VARIABLES (Extracted directly from logo.png)
+       ========================================================================== */
+    :root {
+      /* Brand Color Palette from logo.png */
+      --teal-primary: #008b98;        /* Primary Deep Teal / Petroleum */
+      --teal-dark: #006873;           /* Hover & Dark Teal */
+      --teal-deep: #064c54;           /* Deep Accent for headings */
+      --cyan-accent: #00c4b9;         /* Vibrant Cyan / Aqua Accent from logo symbol */
+      --cyan-bright: #38e2d8;         /* Bright Cyan Highlight */
+      --cyan-soft: #e3f7f6;           /* Soft Cyan Surface Tint */
+      --cyan-glow: rgba(0, 196, 185, 0.25);
+
+      /* Dark Slate & Neutral Scale */
+      --ink-dark: #091c21;            /* Dark Charcoal / Near Black from logo text */
+      --ink-body: #1e3338;            /* Main Body Text */
+      --text-muted: #526f75;          /* Muted Text / Captions */
+      --text-light: #f4faf9;          /* Light Text for Dark Sections */
+
+      /* Backgrounds & Borders */
+      --bg-page: #f5fbfb;             /* Page Background */
+      --bg-surface: #ffffff;          /* Card & Surface Background */
+      --bg-surface-tint: #edf8f8;     /* Tinted Surface */
+      --border-subtle: #d2ebea;       /* Subtle Border */
+      --border-active: #00c4b9;       /* Active Bounding Line */
+
+      /* Brand Gradients */
+      --grad-brand: linear-gradient(135deg, #00707c 0%, #008b98 50%, #00c4b9 100%);
+      --grad-hero: radial-gradient(circle at 85% 15%, rgba(0, 196, 185, 0.15) 0%, transparent 60%), linear-gradient(145deg, #ffffff 0%, #f6fcfc 55%, #e8f7f7 100%);
+      --grad-dark: linear-gradient(140deg, #07191d 0%, #0d2830 55%, #051417 100%);
+      --grad-cyan-soft: linear-gradient(135deg, rgba(0, 196, 185, 0.12) 0%, rgba(0, 139, 152, 0.06) 100%);
+
+      /* Shadows & Elevation */
+      --shadow-sm: 0 2px 8px rgba(9, 28, 33, 0.04);
+      --shadow-md: 0 8px 24px rgba(0, 139, 152, 0.08);
+      --shadow-lg: 0 16px 40px rgba(0, 104, 115, 0.12);
+
+      /* Typography */
+      --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+      /* Radii & Transitions */
+      --radius-sm: 10px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
+      --radius-pill: 9999px;
+      --trans-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --trans-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ==========================================================================
+       2. RESET & BASE STYLES
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-page);
+      color: var(--ink-body);
+      line-height: 1.6;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: color var(--trans-fast);
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: all var(--trans-fast);
+    }
+
+    img, svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* Layout Wrapper */
+    .wrap {
+      width: min(1200px, calc(100% - 36px));
+      margin-inline: auto;
+    }
+
+    /* ==========================================================================
+       3. UTILITY & TYPOGRAPHY STYLES
+       ========================================================================== */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal-primary);
+      margin-bottom: 8px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan-accent);
+      box-shadow: 0 0 8px var(--cyan-accent);
+    }
+
+    .eyebrow.light {
+      color: var(--cyan-bright);
+    }
+    .eyebrow.light::before {
+      background: var(--cyan-bright);
+      box-shadow: 0 0 8px var(--cyan-bright);
+    }
+
+    .accent {
+      color: var(--teal-primary);
+      background: var(--grad-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .lead {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* Buttons & Badges */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 24px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-display);
+      font-size: 14.5px;
+      font-weight: 700;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--ink-dark);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--trans-base);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--cyan-accent);
+      color: var(--teal-primary);
+    }
+
+    .btn.primary {
+      background: var(--grad-brand);
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 6px 20px var(--cyan-glow);
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(135deg, #00606b 0%, #007a86 50%, #00b4a9 100%);
+      box-shadow: 0 8px 24px rgba(0, 196, 185, 0.4);
+      color: #ffffff;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      background: rgba(0, 196, 185, 0.09);
+      border: 1px solid rgba(0, 139, 152, 0.22);
+      color: var(--teal-dark);
+      transition: all var(--trans-fast);
+    }
+
+    .pill:hover {
+      background: rgba(0, 196, 185, 0.18);
+      border-color: var(--cyan-accent);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       4. HEADER & TOPBAR WITH OFFICIAL LOGO
+       ========================================================================== */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      padding: 4px 12px;
+      border-radius: var(--radius-md);
+    }
+
+    .brand-logo-img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .navbtn {
+      padding: 9px 16px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-display);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink-body);
+      border: 1px solid rgba(0, 139, 152, 0.2);
+      background: rgba(0, 196, 185, 0.06);
+      transition: all var(--trans-fast);
+    }
+
+    .navbtn:hover {
+      background: rgba(0, 196, 185, 0.14);
+      border-color: var(--cyan-accent);
+      color: var(--teal-primary);
+    }
+
+    .navbtn.active {
+      background: var(--teal-primary);
+      color: #ffffff;
+      border-color: var(--teal-primary);
+      box-shadow: 0 4px 14px rgba(0, 139, 152, 0.28);
+    }
+
+    /* ==========================================================================
+       5. HERO SECTION
+       ========================================================================== */
+    .hero {
+      margin-top: 24px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      background: var(--grad-hero);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 40px;
+      align-items: center;
+      margin-top: 36px;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 6vw, 68px);
+      line-height: 0.98;
+      margin: 12px 0 16px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--ink-dark);
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 34px;
+      line-height: 1.1;
+      margin: 8px 0 0;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink-dark);
+    }
+
+    .tags, .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .network {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .network svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .small {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    /* ==========================================================================
+       6. CAPABILITIES & TABS
+       ========================================================================== */
+    section {
+      margin-top: 56px;
+    }
+
+    .caps-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .capbtn {
+      border: 1px solid var(--border-subtle);
+      background: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      text-align: left;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--ink-dark);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--trans-fast);
+    }
+
+    .capbtn:hover {
+      border-color: var(--cyan-accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .capbtn.active {
+      background: var(--grad-brand);
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 6px 20px var(--cyan-glow);
+    }
+
+    .panel, .surface {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      margin-top: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ==========================================================================
+       7. MARKET JOURNEY & CARDS
+       ========================================================================== */
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .card {
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      background: #ffffff;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--trans-fast);
+    }
+
+    .card:hover {
+      border-color: var(--cyan-accent);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .num {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--teal-primary);
+      background: var(--cyan-soft);
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .card strong {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink-dark);
+      display: block;
+    }
+
+    /* ==========================================================================
+       8. TWO-COLUMN LAYOUT & FOCUS ROWS
+       ========================================================================== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .license-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .focus-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      margin-top: 8px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-tint);
+      border: 1px solid var(--border-subtle);
+      font-family: var(--font-display);
+      font-weight: 800;
+      color: var(--ink-dark);
+      transition: all var(--trans-fast);
+    }
+
+    .focus-row:hover {
+      background: #ffffff;
+      border-color: var(--cyan-accent);
+      transform: translateX(4px);
+    }
+
+    .focus-row .accent {
+      font-size: 18px;
+    }
+
+    /* ==========================================================================
+       9. PARTNER BANNER & CONTACT PANEL
+       ========================================================================== */
+    .partner {
+      background: var(--grad-dark);
+      color: #ffffff;
+      border: 1px solid rgba(0, 196, 185, 0.22);
+      border-radius: var(--radius-lg);
+      padding: 42px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .partner-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .partner h2 {
+      color: #ffffff;
+      font-size: clamp(30px, 4vw, 44px);
+    }
+
+    .partner p {
+      color: rgba(244, 250, 249, 0.88);
+      font-size: 16.5px;
+      margin-top: 10px;
+      max-width: 620px;
+    }
+
+    .contact {
+      display: none;
+      margin-bottom: 24px;
+      border: 2px solid var(--cyan-accent);
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .contact.show {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer {
+      padding: 36px 0;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* ==========================================================================
+       10. MEDIA QUERIES
+       ========================================================================== */
+    @media (max-width: 900px) {
+      .hero-grid, .two-col, .partner-grid {
+        grid-template-columns: 1fr;
+      }
+      .caps-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .flow-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .wrap {
+        width: min(100% - 24px, 1180px);
+      }
+      .hero {
+        padding: 24px 20px;
+      }
+      .caps-grid, .flow-grid, .license-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- HERO SECTION WITH LOGO IN TOPBAR -->
+  <section class="hero" id="overview">
+    <div class="topbar">
+      <a href="#overview" class="brand-link" aria-label="Bioss Pharma Home">
+        <img src="logo.png" alt="Bioss Pharma Logo" class="brand-logo-img">
+      </a>
+      <div class="nav">
+        <button class="navbtn active" data-target="overview">Overview</button>
+        <button class="navbtn" data-target="capabilities">Capabilities</button>
+        <button class="navbtn" data-target="journey">Market Journey</button>
+        <button class="navbtn" data-target="partner">Partnership</button>
+      </div>
+    </div>
+
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Brazil • South America • Global Partnerships</div>
+        <h1>Your Gateway to <span class="accent">Brazil &amp; South America</span></h1>
+        <p class="lead">Market access, regulatory support, importation and distribution for innovative, specialty and high-complexity medicines.</p>
+        <div class="tags">
+          <span class="pill">Innovative Medicines</span>
+          <span class="pill">Rare Diseases</span>
+          <span class="pill">Oncology</span>
+          <span class="pill">Specialty Pharma</span>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="exploreBtn">Explore our capabilities</button>
+          <button class="btn" id="meetBtnTop">Schedule a meeting</button>
+        </div>
+      </div>
+
+      <div class="network">
+        <svg viewBox="0 0 500 300" aria-label="Global network centered on Brazil">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#008b98"/>
+              <stop offset="50%" stop-color="#00c4b9"/>
+              <stop offset="100%" stop-color="#38e2d8"/>
+            </linearGradient>
+          </defs>
+          <circle cx="250" cy="150" r="102" fill="none" stroke="url(#g)" stroke-width="2" opacity=".45"/>
+          <circle cx="250" cy="150" r="68" fill="none" stroke="url(#g)" stroke-width="2" opacity=".25"/>
+          <path d="M205 60 C235 72 265 92 280 118 C297 150 290 177 271 205 C257 225 238 240 225 260 C214 239 198 220 193 196 C186 165 196 143 190 115 C185 92 189 75 205 60Z" fill="url(#g)" opacity=".88"/>
+          <circle cx="255" cy="156" r="7" fill="#091c21"/>
+          <text x="269" y="160" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" fill="#091c21">Brazil</text>
+          <path d="M255 156 Q340 70 425 80M255 156 Q350 145 438 180M255 156 Q155 105 85 65" fill="none" stroke="#00c4b9" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="425" cy="80" r="6" fill="#008b98"/>
+          <circle cx="438" cy="180" r="6" fill="#008b98"/>
+          <circle cx="85" cy="65" r="6" fill="#008b98"/>
+          <text x="370" y="60" font-size="12" font-weight="600" fill="#526f75">Europe</text>
+          <text x="405" y="205" font-size="12" font-weight="600" fill="#526f75">Asia</text>
+          <text x="43" y="47" font-size="12" font-weight="600" fill="#526f75">North America</text>
+        </svg>
+        <div class="small">Connecting global pharmaceutical innovation to regional market opportunities.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPABILITIES SECTION -->
+  <section id="capabilities">
+    <div class="eyebrow">What we do</div>
+    <h2>One local partner. <span class="accent">Multiple capabilities.</span></h2>
+    <div class="caps-grid">
+      <button class="capbtn active" data-cap="regulatory">Regulatory</button>
+      <button class="capbtn" data-cap="import">Importation</button>
+      <button class="capbtn" data-cap="distribution">Distribution</button>
+      <button class="capbtn" data-cap="cold">Cold Chain</button>
+      <button class="capbtn" data-cap="market">Market Access</button>
+    </div>
+    <div class="panel" id="capPanel">
+      <div class="eyebrow">Regulatory Support</div>
+      <h2 style="font-size:28px">Navigate Brazil with confidence.</h2>
+      <p class="lead" style="font-size:17px">Strategic support for ANVISA pathways, product entry, local regulatory planning and the operational requirements needed to establish a compliant route to market.</p>
+    </div>
+  </section>
+
+  <!-- MARKET JOURNEY SECTION -->
+  <section id="journey">
+    <div class="eyebrow">From innovation to patient</div>
+    <h2>The market journey</h2>
+    <div class="flow-grid">
+      <div class="card"><div class="num">01</div><strong>Manufacturer</strong><div class="small">International innovation partner</div></div>
+      <div class="card"><div class="num">02</div><strong>Regulatory</strong><div class="small">ANVISA strategy &amp; pathway</div></div>
+      <div class="card"><div class="num">03</div><strong>Importation</strong><div class="small">Operational entry into Brazil</div></div>
+      <div class="card"><div class="num">04</div><strong>Distribution</strong><div class="small">National pharmaceutical reach</div></div>
+      <div class="card"><div class="num">05</div><strong>Market Access</strong><div class="small">Commercial &amp; institutional channels</div></div>
+      <div class="card"><div class="num">06</div><strong>Patient</strong><div class="small">Access to innovative therapies</div></div>
+    </div>
+  </section>
+
+  <!-- LICENSES & THERAPEUTIC FOCUS SECTION -->
+  <section class="two-col">
+    <div class="surface">
+      <div class="eyebrow">Licensed &amp; operationally ready</div>
+      <h2 style="font-size:28px">Built for regulated pharmaceutical operations.</h2>
+      <div class="license-grid">
+        <div class="card"><strong>ANVISA AFE</strong><div class="small">Support for authorized pharmaceutical operations.</div></div>
+        <div class="card"><strong>ANVISA AE</strong><div class="small">Structure for products under special control.</div></div>
+        <div class="card"><strong>Import • Store • Distribute • Dispatch</strong><div class="small">Integrated operational capability.</div></div>
+        <div class="card"><strong>GDP-Oriented</strong><div class="small">Good distribution, storage and cold-chain aligned processes.</div></div>
+      </div>
+    </div>
+
+    <div class="surface">
+      <div class="eyebrow">Therapeutic focus</div>
+      <h2 style="font-size:28px">Where we create the most value.</h2>
+      <div class="focus-row"><span>Rare Diseases</span><span class="accent">→</span></div>
+      <div class="focus-row"><span>Oncology</span><span class="accent">→</span></div>
+      <div class="focus-row"><span>Innovative Therapies</span><span class="accent">→</span></div>
+      <div class="focus-row"><span>Specialty Pharmaceuticals</span><span class="accent">→</span></div>
+      <div class="focus-row"><span>High-Complexity Medicines</span><span class="accent">→</span></div>
+    </div>
+  </section>
+
+  <!-- PARTNERSHIP CTA SECTION -->
+  <section class="partner" id="partner">
+    <div class="partner-grid">
+      <div>
+        <div class="eyebrow light">Looking for a partner in Brazil?</div>
+        <h2 style="font-size:44px">Your Product. <span style="color:#38e2d8">Our Market.</span><br>One Partnership.</h2>
+        <p>Bioss Pharma can support international manufacturers as a local representative, regulatory partner, importer, distributor and market access partner.</p>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="meetBtnBottom" style="background:#00c4b9;color:#091c21;border-color:#00c4b9;font-weight:800">Let’s meet at Expo Farm</button>
+        <a class="btn" href="https://biosspharma.com" target="_blank" style="background:rgba(255,255,255,0.12);color:#ffffff;border-color:rgba(255,255,255,0.3)">biosspharma.com</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCHEDULE A MEETING / CONTACT DRAWER -->
+  <div class="contact" id="contactPanel">
+    <div class="eyebrow">Connect with Bioss Pharma</div>
+    <h2 style="font-size:28px">Let’s discuss your product strategy for Brazil.</h2>
+    <p class="lead" style="font-size:17px">The final version can connect directly to your calendar, WhatsApp, LinkedIn or CRM.</p>
+    <button class="btn" id="closeContact" style="margin-top:16px">Close</button>
+  </div>
+
+  <!-- FOOTER WITH LOGO -->
+  <footer class="footer">
+    <div style="display:flex;align-items:center;gap:12px">
+      <img src="logo.png" alt="Bioss Pharma Logo" class="footer-logo">
+      <span>• Interactive Expo Microsite</span>
+    </div>
+    <div>&copy; 2026 Bioss Pharma. All rights reserved.</div>
+  </footer>
+</div>
+
+<script>
+const nav=document.querySelectorAll('.navbtn');
+nav.forEach(btn=>btn.addEventListener('click',()=>{
+  document.getElementById(btn.dataset.target)?.scrollIntoView({behavior:'smooth'});
+  nav.forEach(n=>n.classList.toggle('active',n===btn));
+}));
+document.getElementById('exploreBtn').addEventListener('click',()=>document.getElementById('capabilities').scrollIntoView({behavior:'smooth'}));
+
+const caps={
+regulatory:['Regulatory Support','Navigate Brazil with confidence.','Strategic support for ANVISA pathways, product entry, local regulatory planning and the operational requirements needed to establish a compliant route to market.'],
+import:['Importation','A structured route into Brazil.','Operational support for international pharmaceutical imports, documentation flows and coordinated entry into the Brazilian market.'],
+distribution:['Distribution','Nationwide reach with pharmaceutical discipline.','Distribution capability designed for specialty, high-value and high-complexity medicines across Brazil.'],
+cold:['Cold Chain','Protection for temperature-sensitive therapies.','Temperature-controlled handling and distribution processes for products requiring specialized logistics and operational care.'],
+market:['Market Access','From approval to commercial opportunity.','Commercial and operational support connecting international manufacturers with hospitals, clinics, healthcare providers and institutional opportunities in Brazil.']
+};
+
+document.querySelectorAll('.capbtn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.capbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d=caps[btn.dataset.cap];
+  document.getElementById('capPanel').innerHTML=`<div class="eyebrow">${d[0]}</div><h2 style="font-size:28px">${d[1]}</h2><p class="lead" style="font-size:17px">${d[2]}</p>`;
+}));
+
+const cp=document.getElementById('contactPanel');
+const openContact=()=>{cp.classList.add('show');cp.scrollIntoView({behavior:'smooth'});}
+document.getElementById('meetBtnTop').addEventListener('click',openContact);
+document.getElementById('meetBtnBottom').addEventListener('click',openContact);
+document.getElementById('closeContact').addEventListener('click',()=>cp.classList.remove('show'));
+</script>
+</body>
+</html>
